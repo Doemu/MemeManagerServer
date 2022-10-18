@@ -10,4 +10,14 @@ public class ServerApplication {
         SpringApplication.run(ServerApplication.class, args);
     }
 
+    //Для инициализации наполнения бд через джаву
+//    @Bean
+//    public CommandLineRunner demo(UserRepository repository) {
+//        return (args) -> {
+//            // save a few memes
+//            repository.save(new Meme());
+//            repository.save(new Meme());
+//
+//        };
+
 }
