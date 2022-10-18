@@ -49,11 +49,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         AccountPrincipal principal = (AccountPrincipal) authResult.getPrincipal();
 
-        String token = JWT.create()
+        String accessToken = JWT.create()
                 .withSubject(principal.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
                 .sign(HMAC512(JwtProperties.SECRET.getBytes()));
 
-        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + token);
+        String refreshToken = JWT.create()
+                .withSubject(principal.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME * 10L))
+                .sign(HMAC512(JwtProperties.SECRET.getBytes()));
+
+        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + accessToken);
+        response.addHeader(JwtProperties.REFRESH_TOKEN_HEADER_STRING, refreshToken);
     }
 }
